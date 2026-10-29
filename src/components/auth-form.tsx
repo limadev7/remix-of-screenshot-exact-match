@@ -11,6 +11,7 @@ function translate(msg: string) {
   if (/invalid login/i.test(msg)) return "E-mail ou senha incorretos.";
   if (/email not confirmed/i.test(msg)) return "Confirme seu e-mail antes de entrar (veja sua caixa de entrada).";
   if (/already registered/i.test(msg)) return "Este e-mail já tem conta. Faça login.";
+  if (/weak|easy to guess/i.test(msg)) return "Senha muito fraca. Escolha uma senha mais forte.";
   if (/password/i.test(msg) && /at least/i.test(msg)) return "A senha precisa ter pelo menos 6 caracteres.";
   return msg;
 }

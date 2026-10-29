@@ -52,7 +52,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } catch { /* ignora dados inválidos */ }
     setLoaded(true);
     const nameOf = (u: { email?: string; user_metadata?: Record<string, unknown> } | null | undefined) =>
-      u ? String(u.user_metadata?.nickname || u.user_metadata?.full_name || u.email?.split("@")[0] || "Conta") : null;
+      u ? String(u.user_metadata?.["nickname"] || u.user_metadata?.["full_name"] || u.email?.split("@")[0] || "Conta") : null;
     supabase.auth.getSession().then(({ data }) => setUser(nameOf(data.session?.user)));
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setUser(nameOf(session?.user)));
     return () => sub.subscription.unsubscribe();
