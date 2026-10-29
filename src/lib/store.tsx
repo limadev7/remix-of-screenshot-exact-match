@@ -1,3 +1,4 @@
+import { supabase } from "@/integrations/supabase/client";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { seedMatches, type Match } from "@/data/matches";
 import { toggleSelection, potentialReturn, combinedOdd, type Selection } from "@/lib/slip";
@@ -47,15 +48,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         if (d.stake) setStake(d.stake);
         if (typeof d.balance === "number") setBalance(d.balance);
         if (d.history) setHistory(d.history);
-        if (d.user) setUser(d.user);
       }
     } catch { /* ignora dados inválidos */ }
     setLoaded(true);
+    const nameOf = (u: { email?: string; user_metadata?: Record<string, unknown> } | null | undefined) =>
+      u ? String(u.user_metadata?.nickname || u.user_metadata?.full_name || u.email?.split("@")[0] || "Conta") : null;
+    supabase.auth.getSession().then(({ data }) => setUser(nameOf(data.session?.user)));
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setUser(nameOf(session?.user)));
+    return () => sub.subscription.unsubscribe();
   }, []);
 
   useEffect(() => {
     if (!loaded) return;
-    localStorage.setItem(KEY, JSON.stringify({ matches, slip, stake, balance, history, user }));
+    localStorage.setItem(KEY, JSON.stringify({ matches, slip, stake, balance, history }));
   }, [loaded, matches, slip, stake, balance, history, user]);
 
   const placeBet = useCallback(() => {
