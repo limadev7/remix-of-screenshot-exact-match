@@ -29,7 +29,7 @@ function Busca() {
       <p className="mb-4 text-sm text-muted-foreground">
         {q ? <>{list.length} resultado(s) para “<b className="text-foreground">{q}</b>”</> : "Digite um time ou campeonato na barra de busca."}
       </p>
-      {q && list.length === 0 && <p className="rounded-lg bg-card p-8 text-center text-muted-foreground">Nada encontrado. Tente “Aurora” ou “Copa”.</p>}
+      {q && list.length === 0 && <p className="rounded-lg bg-card p-8 text-center text-muted-foreground">Nada encontrado. Tente “Flamengo” ou “NBA”.</p>}
       <div className="grid gap-3 md:grid-cols-2">{list.map((m) => <MatchCard key={m.id} match={m} />)}</div>
     </Layout>
   );
