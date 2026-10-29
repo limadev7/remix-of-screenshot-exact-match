@@ -24,6 +24,19 @@ function Index() {
 
   return (
     <Layout>
+      <section className="mb-8">
+        <div className="fade-up max-w-lg">
+          <Logo tone="light" className="text-xl" />
+          <h1 className="mt-3 text-4xl font-extrabold uppercase italic leading-[0.95] text-foreground sm:text-5xl">
+            A emoção do esporte <span className="text-primary">começa aqui</span>
+          </h1>
+          <p className="mt-3 text-sm text-muted-foreground">Futebol, basquete e tênis: partidas, odds e resultados em tempo real.</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link to="/futebol" className="rounded-md bg-primary px-5 py-2.5 font-semibold text-primary-foreground hover:opacity-90">Explorar jogos</Link>
+            <Link to="/resultados" className="rounded-md border border-border bg-card px-5 py-2.5 font-semibold text-foreground hover:bg-muted">Ver resultados</Link>
+          </div>
+        </div>
+      </section>
 
       <section className="mb-8">
         <SectionTitle action={<Link to="/ao-vivo" className="flex items-center text-sm font-semibold text-primary">Ao vivo <ChevronRight className="h-4 w-4" /></Link>}>
