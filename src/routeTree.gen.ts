@@ -10,33 +10,154 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AoVivoRouteImport } from './routes/ao-vivo'
+import { Route as BasqueteRouteImport } from './routes/basquete'
+import { Route as BuscaRouteImport } from './routes/busca'
+import { Route as CadastrarRouteImport } from './routes/cadastrar'
+import { Route as EntrarRouteImport } from './routes/entrar'
+import { Route as FutebolRouteImport } from './routes/futebol'
+import { Route as ResultadosRouteImport } from './routes/resultados'
+import { Route as TenisRouteImport } from './routes/tenis'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AoVivoRoute = AoVivoRouteImport.update({
+  id: '/ao-vivo',
+  path: '/ao-vivo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BasqueteRoute = BasqueteRouteImport.update({
+  id: '/basquete',
+  path: '/basquete',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuscaRoute = BuscaRouteImport.update({
+  id: '/busca',
+  path: '/busca',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastrarRoute = CadastrarRouteImport.update({
+  id: '/cadastrar',
+  path: '/cadastrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntrarRoute = EntrarRouteImport.update({
+  id: '/entrar',
+  path: '/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FutebolRoute = FutebolRouteImport.update({
+  id: '/futebol',
+  path: '/futebol',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResultadosRoute = ResultadosRouteImport.update({
+  id: '/resultados',
+  path: '/resultados',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TenisRoute = TenisRouteImport.update({
+  id: '/tenis',
+  path: '/tenis',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ao-vivo': typeof AoVivoRoute
+  '/basquete': typeof BasqueteRoute
+  '/busca': typeof BuscaRoute
+  '/cadastrar': typeof CadastrarRoute
+  '/entrar': typeof EntrarRoute
+  '/futebol': typeof FutebolRoute
+  '/resultados': typeof ResultadosRoute
+  '/tenis': typeof TenisRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ao-vivo': typeof AoVivoRoute
+  '/basquete': typeof BasqueteRoute
+  '/busca': typeof BuscaRoute
+  '/cadastrar': typeof CadastrarRoute
+  '/entrar': typeof EntrarRoute
+  '/futebol': typeof FutebolRoute
+  '/resultados': typeof ResultadosRoute
+  '/tenis': typeof TenisRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ao-vivo': typeof AoVivoRoute
+  '/basquete': typeof BasqueteRoute
+  '/busca': typeof BuscaRoute
+  '/cadastrar': typeof CadastrarRoute
+  '/entrar': typeof EntrarRoute
+  '/futebol': typeof FutebolRoute
+  '/resultados': typeof ResultadosRoute
+  '/tenis': typeof TenisRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/ao-vivo'
+    | '/basquete'
+    | '/busca'
+    | '/cadastrar'
+    | '/entrar'
+    | '/futebol'
+    | '/resultados'
+    | '/tenis'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/ao-vivo'
+    | '/basquete'
+    | '/busca'
+    | '/cadastrar'
+    | '/entrar'
+    | '/futebol'
+    | '/resultados'
+    | '/tenis'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/ao-vivo'
+    | '/basquete'
+    | '/busca'
+    | '/cadastrar'
+    | '/entrar'
+    | '/futebol'
+    | '/resultados'
+    | '/tenis'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  AoVivoRoute: typeof AoVivoRoute
+  BasqueteRoute: typeof BasqueteRoute
+  BuscaRoute: typeof BuscaRoute
+  CadastrarRoute: typeof CadastrarRoute
+  EntrarRoute: typeof EntrarRoute
+  FutebolRoute: typeof FutebolRoute
+  ResultadosRoute: typeof ResultadosRoute
+  TenisRoute: typeof TenisRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +169,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ao-vivo': {
+      id: '/ao-vivo'
+      path: '/ao-vivo'
+      fullPath: '/ao-vivo'
+      preLoaderRoute: typeof AoVivoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/basquete': {
+      id: '/basquete'
+      path: '/basquete'
+      fullPath: '/basquete'
+      preLoaderRoute: typeof BasqueteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/busca': {
+      id: '/busca'
+      path: '/busca'
+      fullPath: '/busca'
+      preLoaderRoute: typeof BuscaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastrar': {
+      id: '/cadastrar'
+      path: '/cadastrar'
+      fullPath: '/cadastrar'
+      preLoaderRoute: typeof CadastrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrar': {
+      id: '/entrar'
+      path: '/entrar'
+      fullPath: '/entrar'
+      preLoaderRoute: typeof EntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/futebol': {
+      id: '/futebol'
+      path: '/futebol'
+      fullPath: '/futebol'
+      preLoaderRoute: typeof FutebolRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resultados': {
+      id: '/resultados'
+      path: '/resultados'
+      fullPath: '/resultados'
+      preLoaderRoute: typeof ResultadosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/tenis': {
+      id: '/tenis'
+      path: '/tenis'
+      fullPath: '/tenis'
+      preLoaderRoute: typeof TenisRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  AoVivoRoute: AoVivoRoute,
+  BasqueteRoute: BasqueteRoute,
+  BuscaRoute: BuscaRoute,
+  CadastrarRoute: CadastrarRoute,
+  EntrarRoute: EntrarRoute,
+  FutebolRoute: FutebolRoute,
+  ResultadosRoute: ResultadosRoute,
+  TenisRoute: TenisRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
