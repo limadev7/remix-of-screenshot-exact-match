@@ -19,7 +19,12 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   const { matches } = useStore();
-  const featured = matches.filter((m) => m.featured && m.status !== "finished").slice(0, 4);
+  const todayStr = new Date(Date.now() - 3 * 3600_000).toISOString().slice(0, 10);
+  const featured = [
+    ...matches.filter((m) => m.status === "live"),
+    ...matches.filter((m) => m.status === "upcoming" && m.date.startsWith(todayStr)),
+    ...matches.filter((m) => m.featured && m.status === "upcoming"),
+  ].filter((m, i, a) => a.findIndex((x) => x.id === m.id) === i).slice(0, 6);
   const upcoming = matches.filter((m) => m.status === "upcoming").sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6);
 
   return (
