@@ -32,7 +32,7 @@ export function getCrest(name: string): Crest {
   const words = name.replace(/\./g, "").split(" ").filter(Boolean);
   const sigla = (words.length > 1 ? words.map((w) => w[0]).join("") : name).slice(0, 3).toUpperCase();
   const h = [...name].reduce((a, c) => a + c.charCodeAt(0), 0);
-  return { sigla, c1: FALLBACK[h % FALLBACK.length], c2: "#ffffff", shape: "shield" };
+  return { sigla, c1: FALLBACK[h % FALLBACK.length] ?? "#0789f9", c2: "#ffffff", shape: "shield" };
 }
 
 const isPlayer = (name: string) => /^[A-Z]\.\s/.test(name);
