@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Layout, SectionTitle, SimNotice } from "@/components/site";
+import { Layout, SectionTitle } from "@/components/site";
 import { TeamBadge } from "@/components/match-card";
 import { useStore } from "@/lib/store";
 import { SPORT_LABEL } from "@/data/matches";
@@ -7,10 +7,10 @@ import { SPORT_LABEL } from "@/data/matches";
 export const Route = createFileRoute("/resultados")({
   head: () => ({
     meta: [
-      { title: "Resultados — 7MBET (simulação)" },
-      { name: "description", content: "Histórico de partidas encerradas com placares finais demonstrativos." },
+      { title: "Resultados — 7MBET" },
+      { name: "description", content: "Histórico de partidas encerradas com placares finais." },
       { property: "og:title", content: "Resultados — 7MBET" },
-      { property: "og:description", content: "Placares finais demonstrativos de partidas fictícias." },
+      { property: "og:description", content: "Placares finais das partidas encerradas." },
     ],
   }),
   component: Resultados,
@@ -27,7 +27,6 @@ function Resultados() {
   return (
     <Layout>
       <SectionTitle>Resultados</SectionTitle>
-      <div className="mb-4"><SimNotice /></div>
       {done.length === 0 && <p className="rounded-lg bg-card p-8 text-center text-muted-foreground">Nenhum resultado ainda.</p>}
       {Object.entries(groups).map(([day, list]) => (
         <section key={day} className="mb-6">

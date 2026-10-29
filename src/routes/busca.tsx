@@ -7,10 +7,10 @@ export const Route = createFileRoute("/busca")({
   validateSearch: (s: Record<string, unknown>) => ({ q: typeof s["q"] === "string" ? (s["q"] as string) : "" }),
   head: () => ({
     meta: [
-      { title: "Buscar — 7MBET (simulação)" },
-      { name: "description", content: "Encontre times e campeonatos fictícios na 7MBET." },
+      { title: "Buscar — 7MBET" },
+      { name: "description", content: "Encontre times e campeonatos na 7MBET." },
       { property: "og:title", content: "Buscar — 7MBET" },
-      { property: "og:description", content: "Pesquisa de times e campeonatos fictícios." },
+      { property: "og:description", content: "Pesquisa de times e campeonatos." },
     ],
   }),
   component: Busca,

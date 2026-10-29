@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Pencil, Plus, RotateCcw, Trash2 } from "lucide-react";
-import { Layout, SectionTitle, SimNotice } from "@/components/site";
+import { Layout, SectionTitle } from "@/components/site";
 import { StatusBadge } from "@/components/match-card";
 import { useStore } from "@/lib/store";
 import { type Match, type Sport, type Status, SPORT_LABEL, STATUS_LABEL, formatDate } from "@/data/matches";
@@ -9,10 +9,10 @@ import { type Match, type Sport, type Status, SPORT_LABEL, STATUS_LABEL, formatD
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
-      { title: "Painel administrativo (demo) — 7MBET" },
-      { name: "description", content: "Painel de demonstração para editar partidas fictícias." },
-      { property: "og:title", content: "Painel demo — 7MBET" },
-      { property: "og:description", content: "Edite partidas, placares e odds fictícias." },
+      { title: "Painel administrativo — 7MBET" },
+      { name: "description", content: "Gerencie partidas, placares e odds." },
+      { property: "og:title", content: "Painel administrativo — 7MBET" },
+      { property: "og:description", content: "Edite partidas, placares e odds." },
       { name: "robots", content: "noindex" },
     ],
   }),
@@ -45,8 +45,8 @@ function Admin() {
           <button onClick={() => setEdit(blank())} className="flex items-center gap-1 rounded-md bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground"><Plus className="h-4 w-4" /> Nova</button>
           <button onClick={() => confirm("Restaurar dados de exemplo?") && resetMatches()} className="flex items-center gap-1 rounded-md border border-border px-3 py-2 text-sm"><RotateCcw className="h-4 w-4" /> Restaurar</button>
         </div>
-      }>Painel demo</SectionTitle>
-      <div className="mb-4"><SimNotice>Painel de demonstração escolar, sem proteção real. Alterações ficam salvas apenas neste navegador.</SimNotice></div>
+      }>Painel administrativo</SectionTitle>
+
 
       {edit && (
         <form
