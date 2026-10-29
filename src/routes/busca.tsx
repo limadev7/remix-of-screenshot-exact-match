@@ -4,7 +4,7 @@ import { MatchCard } from "@/components/match-card";
 import { useStore } from "@/lib/store";
 
 export const Route = createFileRoute("/busca")({
-  validateSearch: (s: Record<string, unknown>) => ({ q: typeof s.q === "string" ? s.q : "" }),
+  validateSearch: (s: Record<string, unknown>) => ({ q: typeof s["q"] === "string" ? (s["q"] as string) : "" }),
   head: () => ({
     meta: [
       { title: "Buscar — 7MBET (simulação)" },

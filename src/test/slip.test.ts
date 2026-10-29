@@ -9,7 +9,7 @@ describe("cupom demonstrativo", () => {
   it("permite só uma seleção por partida (troca o resultado)", () => {
     const list = toggleSelection([s("m1", "home", 2)], s("m1", "away", 3));
     expect(list).toHaveLength(1);
-    expect(list[0].pick).toBe("away");
+    expect(list[0]?.pick).toBe("away");
   });
   it("clicar na mesma odd remove a seleção", () => {
     expect(toggleSelection([s("m1", "home", 2)], s("m1", "home", 2))).toHaveLength(0);
