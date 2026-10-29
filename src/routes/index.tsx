@@ -1,24 +1,88 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ChevronRight, Trophy } from "lucide-react";
+import banner from "@/assets/banner-7mbet.png.asset.json";
+import { Layout, Logo, SectionTitle, SimNotice } from "@/components/site";
+import { MatchCard, TeamBadge, StatusBadge } from "@/components/match-card";
+import { useStore } from "@/lib/store";
+import { POPULAR_LEAGUES, SPORT_LABEL, formatDate } from "@/data/matches";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "7MBET — A emoção do esporte começa aqui (projeto escolar)" },
+      { name: "description", content: "Simulação educacional de plataforma esportiva: partidas, odds demonstrativas e resultados fictícios." },
+      { property: "og:title", content: "7MBET — Plataforma esportiva simulada" },
+      { property: "og:description", content: "Projeto escolar com partidas, odds demonstrativas e cupom fictício. Sem dinheiro real." },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
 function Index() {
+  const { matches } = useStore();
+  const featured = matches.filter((m) => m.featured && m.status !== "finished").slice(0, 4);
+  const upcoming = matches.filter((m) => m.status === "upcoming").sort((a, b) => a.date.localeCompare(b.date)).slice(0, 6);
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <Layout>
+      <section
+        className="relative mb-6 overflow-hidden rounded-xl bg-navy bg-cover bg-center px-6 py-12 text-navy-foreground sm:px-10 sm:py-16"
+        style={{ backgroundImage: `url(${banner.url})` }}
+      >
+        <div className="relative max-w-lg fade-up">
+          <Logo className="text-base" />
+          <h1 className="mt-3 text-4xl font-extrabold uppercase italic leading-[0.95] sm:text-6xl">
+            A emoção do esporte <span className="text-primary">começa aqui</span>
+          </h1>
+          <p className="mt-3 text-sm text-navy-muted">Futebol, basquete e tênis em uma simulação educacional — sem dinheiro real.</p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <Link to="/futebol" className="rounded-md bg-primary px-5 py-2.5 font-semibold text-primary-foreground hover:opacity-90">Explorar jogos</Link>
+            <Link to="/resultados" className="rounded-md border border-navy-foreground/30 px-5 py-2.5 font-semibold hover:bg-navy-foreground/10">Ver resultados</Link>
+          </div>
+        </div>
+      </section>
+
+      <section className="mb-8">
+        <SectionTitle action={<Link to="/ao-vivo" className="flex items-center text-sm font-semibold text-primary">Ao vivo <ChevronRight className="h-4 w-4" /></Link>}>
+          Partidas em destaque
+        </SectionTitle>
+        <div className="grid gap-3 md:grid-cols-2">{featured.map((m) => <MatchCard key={m.id} match={m} />)}</div>
+      </section>
+
+      <section className="mb-8">
+        <SectionTitle>Campeonatos populares</SectionTitle>
+        <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-1 sm:mx-0 sm:grid sm:grid-cols-3 sm:px-0 xl:grid-cols-5">
+          {POPULAR_LEAGUES.map((l) => (
+            <Link key={l.name} to="/busca" search={{ q: l.name }}
+              className="min-w-40 rounded-lg border border-border bg-card p-4 transition-colors hover:border-primary">
+              <Trophy className="mb-2 h-5 w-5 text-primary" />
+              <p className="text-sm font-semibold leading-tight">{l.name}</p>
+              <p className="mt-1 text-xs text-muted-foreground">{SPORT_LABEL[l.sport]}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mb-6">
+        <SectionTitle>Próximos jogos</SectionTitle>
+        <div className="divide-y divide-border overflow-hidden rounded-lg border border-border bg-card">
+          {upcoming.map((m) => (
+            <Link key={m.id} to={m.sport === "futebol" ? "/futebol" : m.sport === "basquete" ? "/basquete" : "/tenis"}
+              className="flex items-center gap-3 p-3 hover:bg-muted">
+              <div className="flex -space-x-2"><TeamBadge name={m.home} size="h-7 w-7" /><TeamBadge name={m.away} size="h-7 w-7" /></div>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-semibold">{m.home} x {m.away}</p>
+                <p className="truncate text-xs text-muted-foreground">{m.league}</p>
+              </div>
+              <div className="text-right text-xs text-muted-foreground">
+                <p>{formatDate(m.date)}</p>
+                <StatusBadge status={m.status} />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <SimNotice />
+    </Layout>
   );
 }

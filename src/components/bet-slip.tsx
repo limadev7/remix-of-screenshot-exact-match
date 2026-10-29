@@ -1,0 +1,98 @@
+import { useState } from "react";
+import { Ticket, Trash2, X } from "lucide-react";
+import { useStore } from "@/lib/store";
+import { combinedOdd, potentialReturn } from "@/lib/slip";
+
+export function BetSlip({ onClose }: { onClose?: () => void }) {
+  const { slip, removeSel, clearSlip, stake, setStake, balance, placeBet, history } = useStore();
+  const [msg, setMsg] = useState<string | null>(null);
+  const odd = combinedOdd(slip);
+  const ret = potentialReturn(stake, slip);
+
+  return (
+    <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
+      <div className="flex items-center justify-between bg-navy px-4 py-3 text-navy-foreground">
+        <span className="flex items-center gap-2 font-display text-lg font-bold uppercase italic">
+          <Ticket className="h-5 w-5 text-primary" /> Cupom demo
+          <span className="rounded bg-primary px-1.5 text-xs not-italic">{slip.length}</span>
+        </span>
+        {onClose && <button aria-label="Fechar cupom" onClick={onClose}><X className="h-5 w-5" /></button>}
+      </div>
+
+      <div className="p-4">
+        {slip.length === 0 ? (
+          <p className="py-6 text-center text-sm text-muted-foreground">Clique em uma odd para adicionar uma seleção ao cupom.</p>
+        ) : (
+          <ul className="mb-4 space-y-2">
+            {slip.map((s) => (
+              <li key={s.matchId} className="fade-up flex items-start gap-2 rounded-md bg-muted p-2.5">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-semibold">{s.pickLabel}</p>
+                  <p className="truncate text-xs text-muted-foreground">{s.label}</p>
+                </div>
+                <b className="text-sm text-primary">{s.odd.toFixed(2)}</b>
+                <button aria-label="Remover seleção" onClick={() => removeSel(s.matchId)} className="text-muted-foreground hover:text-destructive">
+                  <X className="h-4 w-4" />
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        <label className="mb-1 block text-xs font-medium text-muted-foreground">Valor fictício (créditos)</label>
+        <input
+          type="number" min={1} step={1} value={stake}
+          onChange={(e) => setStake(Math.max(0, Number(e.target.value)))}
+          className="mb-3 h-10 w-full rounded-md border border-input bg-background px-3 text-sm outline-none focus:border-primary"
+        />
+        <div className="mb-3 flex gap-2">
+          {[5, 10, 25, 50].map((v) => (
+            <button key={v} onClick={() => setStake(v)} className="flex-1 rounded border border-border py-1 text-xs hover:border-primary">{v}</button>
+          ))}
+        </div>
+
+        <dl className="space-y-1 text-sm">
+          <div className="flex justify-between"><dt className="text-muted-foreground">Odd combinada</dt><dd className="font-bold">{odd ? odd.toFixed(2) : "—"}</dd></div>
+          <div className="flex justify-between"><dt className="text-muted-foreground">Retorno teórico</dt><dd className="font-bold text-success">{ret.toFixed(2)}</dd></div>
+          <div className="flex justify-between text-xs"><dt className="text-muted-foreground">Saldo demo</dt><dd>{balance.toFixed(2)}</dd></div>
+        </dl>
+
+        <div className="mt-4 flex gap-2">
+          <button onClick={clearSlip} disabled={!slip.length} aria-label="Limpar cupom"
+            className="flex items-center justify-center rounded-md border border-border px-3 disabled:opacity-40 hover:border-destructive hover:text-destructive">
+            <Trash2 className="h-4 w-4" />
+          </button>
+          <button
+            disabled={!slip.length || stake <= 0}
+            onClick={() => {
+              if (stake > balance) return setMsg("Créditos demo insuficientes.");
+              setMsg(placeBet() ? "Simulação registrada no histórico local." : null);
+            }}
+            className="h-10 flex-1 rounded-md bg-primary font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
+          >
+            Simular aposta
+          </button>
+        </div>
+        {msg && <p className="mt-2 text-xs text-success">{msg}</p>}
+
+        <p className="mt-4 rounded bg-accent px-2 py-1.5 text-center text-[11px] font-medium text-accent-foreground">
+          Simulação educacional. Nenhuma aposta real é realizada.
+        </p>
+
+        {history.length > 0 && (
+          <details className="mt-3 text-xs">
+            <summary className="cursor-pointer text-muted-foreground">Histórico de simulações ({history.length})</summary>
+            <ul className="mt-2 space-y-1">
+              {history.map((h) => (
+                <li key={h.id} className="flex justify-between rounded bg-muted px-2 py-1">
+                  <span>{h.selections.length} sel. · odd {h.odd.toFixed(2)}</span>
+                  <span>{h.stake} → <b className="text-success">{h.ret.toFixed(2)}</b></span>
+                </li>
+              ))}
+            </ul>
+          </details>
+        )}
+      </div>
+    </div>
+  );
+}
