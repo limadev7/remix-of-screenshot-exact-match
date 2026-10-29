@@ -1,33 +1,36 @@
 // Escudos e siglas gerados para cada clube/jogador (cores de cada equipe = conteúdo).
 type Crest = { sigla: string; c1: string; c2: string; shape: "shield" | "round" | "hex" };
 
-const CRESTS: Record<string, Crest> = {
-  "Atlético Aurora": { sigla: "ATA", c1: "#c8102e", c2: "#111111", shape: "shield" },
-  "Real Vale Verde": { sigla: "RVV", c1: "#0b7a3b", c2: "#ffffff", shape: "shield" },
-  "Porto Azul FC": { sigla: "PAZ", c1: "#0057b8", c2: "#ffffff", shape: "round" },
-  "União Serrana": { sigla: "UNS", c1: "#6b2c91", c2: "#f2c230", shape: "shield" },
-  "Esporte Litoral": { sigla: "ESL", c1: "#f28c00", c2: "#0a2240", shape: "hex" },
-  "Grêmio Planalto": { sigla: "GPL", c1: "#1e3a8a", c2: "#38bdf8", shape: "shield" },
-  "Northbridge United": { sigla: "NBU", c1: "#b91c1c", c2: "#fde047", shape: "round" },
-  "Castelo Rovers": { sigla: "CRO", c1: "#0f172a", c2: "#e5e7eb", shape: "shield" },
-  "Deportivo Sol": { sigla: "DSO", c1: "#facc15", c2: "#b45309", shape: "round" },
-  "Real Montanha": { sigla: "RMO", c1: "#ffffff", c2: "#4c1d95", shape: "shield" },
-  "Olímpico Rio Claro": { sigla: "ORC", c1: "#0891b2", c2: "#ffffff", shape: "hex" },
-  "Trovões da Capital": { sigla: "TRC", c1: "#1d4ed8", c2: "#facc15", shape: "round" },
-  "Falcões do Sul": { sigla: "FAS", c1: "#991b1b", c2: "#f5f5f4", shape: "hex" },
-  "Leões Metropolitanos": { sigla: "LEM", c1: "#ca8a04", c2: "#111827", shape: "shield" },
-  "Tubarões da Baía": { sigla: "TUB", c1: "#0e7490", c2: "#e0f2fe", shape: "round" },
-  "L. Andrade": { sigla: "BRA", c1: "#009c3b", c2: "#ffdf00", shape: "round" },
-  "M. Kovacs": { sigla: "HUN", c1: "#cd2a3e", c2: "#436f4d", shape: "round" },
-  "R. Silveira": { sigla: "POR", c1: "#006600", c2: "#ff0000", shape: "round" },
-  "T. Nakamura": { sigla: "JPN", c1: "#ffffff", c2: "#bc002d", shape: "round" },
-  "J. Ferreira": { sigla: "BRA", c1: "#009c3b", c2: "#ffdf00", shape: "round" },
-  "A. Lindqvist": { sigla: "SWE", c1: "#006aa7", c2: "#fecc00", shape: "round" },
+const F = (id: number) => `https://media.api-sports.io/football/teams/${id}.png`;
+const N = (c: string) => `https://a.espncdn.com/i/teamlogos/nba/500/${c}.png`;
+const FL = (c: string) => `https://flagcdn.com/w160/${c}.png`;
+
+// Logos reais dos clubes / bandeiras dos tenistas + siglas
+const LOGOS: Record<string, { sigla: string; src: string; flag?: boolean }> = {
+  Flamengo: { sigla: "FLA", src: F(127) }, Palmeiras: { sigla: "PAL", src: F(121) },
+  Corinthians: { sigla: "COR", src: F(131) }, "São Paulo": { sigla: "SAO", src: F(126) },
+  Santos: { sigla: "SAN", src: F(128) }, "Grêmio": { sigla: "GRE", src: F(130) },
+  Internacional: { sigla: "INT", src: F(119) }, "Atlético Mineiro": { sigla: "CAM", src: F(1062) },
+  Fluminense: { sigla: "FLU", src: F(124) }, Botafogo: { sigla: "BOT", src: F(120) },
+  "Real Madrid": { sigla: "RMA", src: F(541) }, Barcelona: { sigla: "BAR", src: F(529) },
+  "Manchester City": { sigla: "MCI", src: F(50) }, Liverpool: { sigla: "LIV", src: F(40) },
+  Arsenal: { sigla: "ARS", src: F(42) }, PSG: { sigla: "PSG", src: F(85) },
+  "Bayern de Munique": { sigla: "BAY", src: F(157) }, Chelsea: { sigla: "CHE", src: F(49) },
+  "Manchester United": { sigla: "MUN", src: F(33) }, Juventus: { sigla: "JUV", src: F(496) },
+  "Los Angeles Lakers": { sigla: "LAL", src: N("lal") }, "Boston Celtics": { sigla: "BOS", src: N("bos") },
+  "Golden State Warriors": { sigla: "GSW", src: N("gs") }, "Chicago Bulls": { sigla: "CHI", src: N("chi") },
+  "Miami Heat": { sigla: "MIA", src: N("mia") }, "New York Knicks": { sigla: "NYK", src: N("ny") },
+  "J. Sinner": { sigla: "ITA", src: FL("it"), flag: true }, "C. Alcaraz": { sigla: "ESP", src: FL("es"), flag: true },
+  "N. Djokovic": { sigla: "SRB", src: FL("rs"), flag: true }, "J. Fonseca": { sigla: "BRA", src: FL("br"), flag: true },
+  "A. Zverev": { sigla: "GER", src: FL("de"), flag: true }, "D. Medvedev": { sigla: "RUS", src: FL("ru"), flag: true },
 };
+
+const CRESTS: Record<string, Crest> = {};
 
 const FALLBACK = ["#0789f9", "#062653", "#16a34a", "#dc2626", "#7c3aed", "#ea580c"];
 
 export function getCrest(name: string): Crest {
+  if (LOGOS[name]) return { sigla: LOGOS[name].sigla, c1: "#0789f9", c2: "#ffffff", shape: "round" };
   if (CRESTS[name]) return CRESTS[name];
   const words = name.replace(/\./g, "").split(" ").filter(Boolean);
   const sigla = (words.length > 1 ? words.map((w) => w[0]).join("") : name).slice(0, 3).toUpperCase();
@@ -42,6 +45,12 @@ function initials(name: string) {
 }
 
 export function TeamCrest({ name, size = "h-9 w-9" }: { name: string; size?: string }) {
+  const logo = LOGOS[name];
+  if (logo)
+    return (
+      <img src={logo.src} alt={logo.flag ? `Bandeira ${logo.sigla}` : `Escudo ${name}`} loading="lazy"
+        className={`${size} shrink-0 ${logo.flag ? "rounded-full object-cover ring-2 ring-border" : "object-contain"}`} />
+    );
   const c = getCrest(name);
   const id = `g${c.sigla}${c.c1.slice(1)}`;
   const light = ["#ffffff", "#facc15", "#ffdf00", "#e5e7eb"].includes(c.c1);
