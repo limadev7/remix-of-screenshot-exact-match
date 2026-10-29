@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, Trophy } from "lucide-react";
-import { Layout, Logo, SectionTitle, SimNotice } from "@/components/site";
+import { Layout, SectionTitle, SimNotice } from "@/components/site";
 import { MatchCard, TeamBadge, StatusBadge } from "@/components/match-card";
 import { useStore } from "@/lib/store";
 import { POPULAR_LEAGUES, SPORT_LABEL, formatDate } from "@/data/matches";
@@ -26,8 +26,7 @@ function Index() {
     <Layout>
       <section className="mb-8">
         <div className="fade-up max-w-lg">
-          <Logo tone="light" className="text-xl" />
-          <h1 className="mt-3 text-4xl font-extrabold uppercase italic leading-[0.95] text-foreground sm:text-5xl">
+          <h1 className="text-4xl font-extrabold uppercase italic leading-[0.95] text-foreground sm:text-5xl">
             A emoção do esporte <span className="text-primary">começa aqui</span>
           </h1>
           <p className="mt-3 text-sm text-muted-foreground">Futebol, basquete e tênis: partidas, odds e resultados em tempo real.</p>
