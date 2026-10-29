@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, Trophy } from "lucide-react";
-import banner from "@/assets/banner-7mbet.png.asset.json";
-import { Layout, Logo, SectionTitle, SimNotice } from "@/components/site";
+import { Layout, SectionTitle, SimNotice } from "@/components/site";
 import { MatchCard, TeamBadge, StatusBadge } from "@/components/match-card";
 import { useStore } from "@/lib/store";
 import { POPULAR_LEAGUES, SPORT_LABEL, formatDate } from "@/data/matches";
@@ -25,22 +24,6 @@ function Index() {
 
   return (
     <Layout>
-      <section
-        className="relative mb-6 overflow-hidden rounded-xl bg-navy bg-cover bg-center px-6 py-12 text-navy-foreground sm:px-10 sm:py-16"
-        style={{ backgroundImage: `url(${banner.url})` }}
-      >
-        <div className="relative max-w-lg fade-up">
-          <Logo className="text-base" />
-          <h1 className="mt-3 text-4xl font-extrabold uppercase italic leading-[0.95] sm:text-6xl">
-            A emoção do esporte <span className="text-primary">começa aqui</span>
-          </h1>
-          <p className="mt-3 text-sm text-navy-muted">Futebol, basquete e tênis: partidas, odds e resultados em tempo real.</p>
-          <div className="mt-6 flex flex-wrap gap-3">
-            <Link to="/futebol" className="rounded-md bg-primary px-5 py-2.5 font-semibold text-primary-foreground hover:opacity-90">Explorar jogos</Link>
-            <Link to="/resultados" className="rounded-md border border-navy-foreground/30 px-5 py-2.5 font-semibold hover:bg-navy-foreground/10">Ver resultados</Link>
-          </div>
-        </div>
-      </section>
 
       <section className="mb-8">
         <SectionTitle action={<Link to="/ao-vivo" className="flex items-center text-sm font-semibold text-primary">Ao vivo <ChevronRight className="h-4 w-4" /></Link>}>
