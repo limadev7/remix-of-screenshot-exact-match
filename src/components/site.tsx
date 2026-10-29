@@ -58,26 +58,32 @@ export function Layout({ children }: { children: ReactNode }) {
     <div className="min-h-screen flex flex-col pb-16 lg:pb-0">
       <header className="sticky top-0 z-40 bg-navy text-navy-foreground shadow-md">
         <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4">
-          <button className="lg:hidden" aria-label="Abrir menu" onClick={() => setMenu(true)}>
-            <Menu className="h-6 w-6" />
-          </button>
+          {!isHome && (
+            <button className="lg:hidden" aria-label="Abrir menu" onClick={() => setMenu(true)}>
+              <Menu className="h-6 w-6" />
+            </button>
+          )}
           <Link to="/" aria-label="7MBET início"><Logo /></Link>
-          <div className="hidden flex-1 max-w-sm md:block"><SearchBox /></div>
-          <div className="ml-auto flex items-center gap-2">
-            <span className="hidden sm:inline rounded-md bg-navy-deep px-3 py-1.5 text-xs text-navy-muted">
-              Créditos: <b className="text-navy-foreground">{balance.toFixed(2)}</b>
-            </span>
-            {user ? (
-              <Link to="/entrar" className="flex items-center gap-1.5 rounded-md bg-navy-deep px-3 py-1.5 text-sm">
-                <User className="h-4 w-4" /> {user}
-              </Link>
-            ) : (
-              <>
-                <Link to="/entrar" className="rounded-md px-3 py-1.5 text-sm font-semibold hover:bg-navy-deep">Entrar</Link>
-                <Link to="/cadastrar" className="hidden sm:inline-flex rounded-md bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90">Cadastrar</Link>
-              </>
-            )}
-          </div>
+          {!isHome && (
+            <>
+              <div className="hidden flex-1 max-w-sm md:block"><SearchBox /></div>
+              <div className="ml-auto flex items-center gap-2">
+                <span className="hidden sm:inline rounded-md bg-navy-deep px-3 py-1.5 text-xs text-navy-muted">
+                  Créditos: <b className="text-navy-foreground">{balance.toFixed(2)}</b>
+                </span>
+                {user ? (
+                  <Link to="/entrar" className="flex items-center gap-1.5 rounded-md bg-navy-deep px-3 py-1.5 text-sm">
+                    <User className="h-4 w-4" /> {user}
+                  </Link>
+                ) : (
+                  <>
+                    <Link to="/entrar" className="rounded-md px-3 py-1.5 text-sm font-semibold hover:bg-navy-deep">Entrar</Link>
+                    <Link to="/cadastrar" className="hidden sm:inline-flex rounded-md bg-primary px-3 py-1.5 text-sm font-semibold text-primary-foreground hover:opacity-90">Cadastrar</Link>
+                  </>
+                )}
+              </div>
+            </>
+          )}
         </div>
         <nav className="hidden lg:block border-t border-navy-foreground/10 bg-navy-deep">
           <div className="mx-auto flex max-w-7xl gap-1 px-4">
