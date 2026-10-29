@@ -13,7 +13,7 @@ export function BetSlip({ onClose }: { onClose?: () => void }) {
     <div className="overflow-hidden rounded-lg border border-border bg-card shadow-sm">
       <div className="flex items-center justify-between bg-navy px-4 py-3 text-navy-foreground">
         <span className="flex items-center gap-2 font-display text-lg font-bold uppercase italic">
-          <Ticket className="h-5 w-5 text-primary" /> Cupom demo
+          <Ticket className="h-5 w-5 text-primary" /> Cupom
           <span className="rounded bg-primary px-1.5 text-xs not-italic">{slip.length}</span>
         </span>
         {onClose && <button aria-label="Fechar cupom" onClick={onClose}><X className="h-5 w-5" /></button>}
@@ -39,7 +39,7 @@ export function BetSlip({ onClose }: { onClose?: () => void }) {
           </ul>
         )}
 
-        <label className="mb-1 block text-xs font-medium text-muted-foreground">Valor fictício (créditos)</label>
+        <label className="mb-1 block text-xs font-medium text-muted-foreground">Valor (créditos)</label>
         <input
           type="number" min={1} step={1} value={stake}
           onChange={(e) => setStake(Math.max(0, Number(e.target.value)))}
@@ -54,7 +54,7 @@ export function BetSlip({ onClose }: { onClose?: () => void }) {
         <dl className="space-y-1 text-sm">
           <div className="flex justify-between"><dt className="text-muted-foreground">Odd combinada</dt><dd className="font-bold">{odd ? odd.toFixed(2) : "—"}</dd></div>
           <div className="flex justify-between"><dt className="text-muted-foreground">Retorno teórico</dt><dd className="font-bold text-success">{ret.toFixed(2)}</dd></div>
-          <div className="flex justify-between text-xs"><dt className="text-muted-foreground">Saldo demo</dt><dd>{balance.toFixed(2)}</dd></div>
+          <div className="flex justify-between text-xs"><dt className="text-muted-foreground">Saldo</dt><dd>{balance.toFixed(2)}</dd></div>
         </dl>
 
         <div className="mt-4 flex gap-2">
@@ -65,23 +65,20 @@ export function BetSlip({ onClose }: { onClose?: () => void }) {
           <button
             disabled={!slip.length || stake <= 0}
             onClick={() => {
-              if (stake > balance) return setMsg("Créditos demo insuficientes.");
-              setMsg(placeBet() ? "Simulação registrada no histórico local." : null);
+              if (stake > balance) return setMsg("Saldo insuficiente.");
+              setMsg(placeBet() ? "Aposta registrada no histórico." : null);
             }}
             className="h-10 flex-1 rounded-md bg-primary font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
           >
-            Simular aposta
+            Apostar
           </button>
         </div>
         {msg && <p className="mt-2 text-xs text-success">{msg}</p>}
 
-        <p className="mt-4 rounded bg-accent px-2 py-1.5 text-center text-[11px] font-medium text-accent-foreground">
-          Simulação educacional. Nenhuma aposta real é realizada.
-        </p>
 
         {history.length > 0 && (
           <details className="mt-3 text-xs">
-            <summary className="cursor-pointer text-muted-foreground">Histórico de simulações ({history.length})</summary>
+            <summary className="cursor-pointer text-muted-foreground">Histórico de apostas ({history.length})</summary>
             <ul className="mt-2 space-y-1">
               {history.map((h) => (
                 <li key={h.id} className="flex justify-between rounded bg-muted px-2 py-1">

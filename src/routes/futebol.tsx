@@ -4,10 +4,10 @@ import { SportPage } from "@/components/sport-page";
 export const Route = createFileRoute("/futebol")({
   head: () => ({
     meta: [
-      { title: "Futebol — 7MBET (simulação)" },
-      { name: "description", content: "Partidas de futebol fictícias com odds demonstrativas e filtros." },
+      { title: "Futebol — 7MBET" },
+      { name: "description", content: "Partidas de futebol com odds e filtros." },
       { property: "og:title", content: "Futebol — 7MBET" },
-      { property: "og:description", content: "Partidas de futebol fictícias com odds demonstrativas." },
+      { property: "og:description", content: "Partidas de futebol com odds e resultados." },
     ],
   }),
   component: () => <SportPage sport="futebol" />,

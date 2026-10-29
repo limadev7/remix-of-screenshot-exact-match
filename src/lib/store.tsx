@@ -25,7 +25,7 @@ interface Store {
 }
 
 const Ctx = createContext<Store | null>(null);
-const KEY = "7mbet-demo-v1";
+const KEY = "7mbet-v1";
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [matches, setMatches] = useState<Match[]>(seedMatches);

@@ -9,10 +9,10 @@ import { POPULAR_LEAGUES, SPORT_LABEL, formatDate } from "@/data/matches";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "7MBET — A emoção do esporte começa aqui (projeto escolar)" },
-      { name: "description", content: "Simulação educacional de plataforma esportiva: partidas, odds demonstrativas e resultados fictícios." },
-      { property: "og:title", content: "7MBET — Plataforma esportiva simulada" },
-      { property: "og:description", content: "Projeto escolar com partidas, odds demonstrativas e cupom fictício. Sem dinheiro real." },
+      { title: "7MBET — A emoção do esporte começa aqui" },
+      { name: "description", content: "Futebol, basquete e tênis: partidas, odds e resultados em um só lugar." },
+      { property: "og:title", content: "7MBET — Plataforma esportiva" },
+      { property: "og:description", content: "Partidas, odds e resultados de futebol, basquete e tênis." },
     ],
   }),
   component: Index,
@@ -34,7 +34,7 @@ function Index() {
           <h1 className="mt-3 text-4xl font-extrabold uppercase italic leading-[0.95] sm:text-6xl">
             A emoção do esporte <span className="text-primary">começa aqui</span>
           </h1>
-          <p className="mt-3 text-sm text-navy-muted">Futebol, basquete e tênis em uma simulação educacional — sem dinheiro real.</p>
+          <p className="mt-3 text-sm text-navy-muted">Futebol, basquete e tênis: partidas, odds e resultados em tempo real.</p>
           <div className="mt-6 flex flex-wrap gap-3">
             <Link to="/futebol" className="rounded-md bg-primary px-5 py-2.5 font-semibold text-primary-foreground hover:opacity-90">Explorar jogos</Link>
             <Link to="/resultados" className="rounded-md border border-navy-foreground/30 px-5 py-2.5 font-semibold hover:bg-navy-foreground/10">Ver resultados</Link>

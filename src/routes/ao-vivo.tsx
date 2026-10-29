@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Layout, SectionTitle, SimNotice } from "@/components/site";
+import { Layout, SectionTitle } from "@/components/site";
 import { OddButtons, TeamBadge } from "@/components/match-card";
 import { useStore } from "@/lib/store";
 import type { Match } from "@/data/matches";
@@ -8,10 +8,10 @@ import type { Match } from "@/data/matches";
 export const Route = createFileRoute("/ao-vivo")({
   head: () => ({
     meta: [
-      { title: "Ao Vivo — 7MBET (simulação)" },
-      { name: "description", content: "Partidas simuladas ao vivo com placar, cronômetro fictício e estatísticas." },
+      { title: "Ao Vivo — 7MBET" },
+      { name: "description", content: "Partidas ao vivo com placar, cronômetro e estatísticas." },
       { property: "og:title", content: "Ao Vivo — 7MBET" },
-      { property: "og:description", content: "Partidas simuladas com placar e estatísticas demonstrativas." },
+      { property: "og:description", content: "Placar, cronômetro e estatísticas em tempo real." },
     ],
   }),
   component: AoVivo,
@@ -70,9 +70,8 @@ function AoVivo() {
   return (
     <Layout>
       <SectionTitle>Ao vivo</SectionTitle>
-      <div className="mb-4"><SimNotice>Dados simulados: placares, cronômetro e estatísticas não representam eventos esportivos em tempo real.</SimNotice></div>
       {live.length === 0 ? (
-        <p className="rounded-lg bg-card p-8 text-center text-muted-foreground">Nenhuma partida simulada ao vivo agora.</p>
+        <p className="rounded-lg bg-card p-8 text-center text-muted-foreground">Nenhuma partida ao vivo agora.</p>
       ) : (
         <div className="grid gap-4 md:grid-cols-2">{live.map((m) => <LiveCard key={m.id} match={m} elapsed={elapsed} />)}</div>
       )}

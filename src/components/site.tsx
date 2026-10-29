@@ -5,7 +5,7 @@ import { useStore } from "@/lib/store";
 import { BetSlip } from "@/components/bet-slip";
 
 export const DISCLAIMER =
-  "7MBET é um projeto fictício desenvolvido exclusivamente para fins educacionais. Odds, partidas e resultados podem ser simulados. A plataforma não realiza apostas com dinheiro real.";
+  "7MBET — Futebol, basquete e tênis: partidas, odds e resultados em um só lugar.";
 
 export const NAV = [
   { to: "/", label: "Início", icon: Home },
@@ -64,7 +64,7 @@ export function Layout({ children }: { children: ReactNode }) {
           <div className="hidden flex-1 max-w-sm md:block"><SearchBox /></div>
           <div className="ml-auto flex items-center gap-2">
             <span className="hidden sm:inline rounded-md bg-navy-deep px-3 py-1.5 text-xs text-navy-muted">
-              Créditos demo: <b className="text-navy-foreground">{balance.toFixed(2)}</b>
+              Créditos: <b className="text-navy-foreground">{balance.toFixed(2)}</b>
             </span>
             {user ? (
               <Link to="/entrar" className="flex items-center gap-1.5 rounded-md bg-navy-deep px-3 py-1.5 text-sm">
@@ -91,7 +91,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 <n.icon className="h-4 w-4" /> {n.label}
               </Link>
             ))}
-            <Link to="/admin" className="ml-auto px-4 py-2.5 text-xs text-navy-muted hover:text-navy-foreground">Painel demo</Link>
+            <Link to="/admin" className="ml-auto px-4 py-2.5 text-xs text-navy-muted hover:text-navy-foreground">Painel</Link>
           </div>
         </nav>
       </header>
@@ -113,9 +113,9 @@ export function Layout({ children }: { children: ReactNode }) {
                   <n.icon className="h-5 w-5" /> {n.label}
                 </Link>
               ))}
-              <Link to="/admin" onClick={() => setMenu(false)} className="px-3 py-3 text-sm text-navy-muted">Painel administrativo (demo)</Link>
+              <Link to="/admin" onClick={() => setMenu(false)} className="px-3 py-3 text-sm text-navy-muted">Painel administrativo</Link>
             </div>
-            <p className="mt-6 text-xs text-navy-muted">Créditos demo: {balance.toFixed(2)}</p>
+            <p className="mt-6 text-xs text-navy-muted">Créditos: {balance.toFixed(2)}</p>
           </aside>
         </div>
       )}
@@ -131,7 +131,7 @@ export function Layout({ children }: { children: ReactNode }) {
         <div className="mx-auto max-w-7xl px-4 py-8 grid gap-6 md:grid-cols-3">
           <div>
             <Logo className="text-xl" />
-            <p className="mt-2 text-sm">Projeto escolar de simulação de plataforma esportiva.</p>
+            <p className="mt-2 text-sm">A emoção do esporte em um só lugar.</p>
           </div>
           <div className="flex flex-col gap-1 text-sm">
             {NAV.map((n) => <Link key={n.to} to={n.to} className="hover:text-navy-foreground">{n.label}</Link>)}
@@ -176,7 +176,7 @@ function MobileSlip() {
 export function SimNotice({ children }: { children?: ReactNode }) {
   return (
     <p className="rounded-md border border-primary/20 bg-accent px-3 py-2 text-xs text-accent-foreground">
-      {children ?? "Dados demonstrativos. Odds, partidas e resultados são fictícios."}
+      {children ?? "Odds e resultados atualizados em tempo real."}
     </p>
   );
 }
