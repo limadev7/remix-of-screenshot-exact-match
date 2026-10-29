@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ChevronRight, Trophy } from "lucide-react";
-import { Layout, SectionTitle, SimNotice } from "@/components/site";
+import { Layout, Logo, SectionTitle, SimNotice } from "@/components/site";
 import { MatchCard, TeamBadge, StatusBadge } from "@/components/match-card";
 import { useStore } from "@/lib/store";
 import { POPULAR_LEAGUES, SPORT_LABEL, formatDate } from "@/data/matches";
