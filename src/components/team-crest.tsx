@@ -27,6 +27,11 @@ const LOGOS: Record<string, { sigla: string; src: string; flag?: boolean }> = {
 
 const CRESTS: Record<string, Crest> = {};
 
+export function registerLogo(name: string, sigla: string | undefined, src: string | undefined) {
+  if (!src || LOGOS[name]) return;
+  LOGOS[name] = { sigla: (sigla || name.slice(0, 3)).toUpperCase(), src };
+}
+
 const FALLBACK = ["#0789f9", "#062653", "#16a34a", "#dc2626", "#7c3aed", "#ea580c"];
 
 export function getCrest(name: string): Crest {

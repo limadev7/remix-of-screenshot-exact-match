@@ -1,6 +1,8 @@
 import { supabase } from "@/integrations/supabase/client";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { seedMatches, type Match } from "@/data/matches";
+import { fetchRealMatches } from "@/lib/real-matches.functions";
+import { registerLogo } from "@/components/team-crest";
 import { toggleSelection, potentialReturn, combinedOdd, type Selection } from "@/lib/slip";
 
 interface SimBet { id: string; date: string; selections: Selection[]; stake: number; odd: number; ret: number }
@@ -51,11 +53,18 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
     } catch { /* ignora dados inválidos */ }
     setLoaded(true);
+    const loadReal = () => fetchRealMatches().then((real) => {
+      if (!real.length) return;
+      real.forEach((m) => { registerLogo(m.home, m.homeAbbr, m.homeLogo); registerLogo(m.away, m.awayAbbr, m.awayLogo); });
+      setMatches((cur) => [...real, ...cur.filter((x) => !x.id.startsWith("espn-") && x.sport === "tenis")]);
+    }).catch(() => {});
+    loadReal();
+    const timer = setInterval(loadReal, 60_000);
     const nameOf = (u: { email?: string; user_metadata?: Record<string, unknown> } | null | undefined) =>
       u ? String(u.user_metadata?.["nickname"] || u.user_metadata?.["full_name"] || u.email?.split("@")[0] || "Conta") : null;
     supabase.auth.getSession().then(({ data }) => setUser(nameOf(data.session?.user)));
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setUser(nameOf(session?.user)));
-    return () => sub.subscription.unsubscribe();
+    return () => { sub.subscription.unsubscribe(); clearInterval(timer); };
   }, []);
 
   useEffect(() => {
