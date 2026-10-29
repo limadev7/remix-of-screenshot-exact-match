@@ -16,10 +16,10 @@ export const NAV = [
   { to: "/resultados", label: "Resultados", icon: ListChecks },
 ] as const;
 
-export function Logo({ className = "text-2xl" }: { className?: string }) {
+export function Logo({ className = "text-2xl", tone = "dark" }: { className?: string; tone?: "dark" | "light" }) {
   return (
     <span className={`font-display font-extrabold italic tracking-tight leading-none ${className}`}>
-      <span className="text-navy-foreground">7M</span>
+      <span className={tone === "light" ? "text-foreground" : "text-navy-foreground"}>7M</span>
       <span className="text-primary">BET</span>
     </span>
   );
