@@ -1,17 +1,12 @@
+import { TeamCrest, getCrest } from "@/components/team-crest";
 import { type Match, STATUS_LABEL, formatDate } from "@/data/matches";
 import { useStore } from "@/lib/store";
 import type { Pick } from "@/lib/slip";
 
-const PALETTE = ["bg-primary", "bg-navy", "bg-success", "bg-accent-foreground", "bg-destructive", "bg-secondary-foreground"];
+
 
 export function TeamBadge({ name, size = "h-9 w-9" }: { name: string; size?: string }) {
-  const initials = name.replace(/\./g, "").split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase();
-  const hash = [...name].reduce((a, c) => a + c.charCodeAt(0), 0);
-  return (
-    <span className={`${size} ${PALETTE[hash % PALETTE.length]} grid shrink-0 place-items-center rounded-full font-display text-sm font-bold text-primary-foreground ring-2 ring-card`}>
-      {initials}
-    </span>
-  );
+  return <TeamCrest name={name} size={size} />;
 }
 
 export function StatusBadge({ status }: { status: Match["status"] }) {
@@ -75,7 +70,7 @@ export function MatchCard({ match }: { match: Match }) {
         {([["home", match.home, match.scoreHome], ["away", match.away, match.scoreAway]] as const).map(([k, name, score]) => (
           <div key={k} className="flex items-center gap-3">
             <TeamBadge name={name} />
-            <span className="flex-1 truncate font-semibold text-card-foreground">{name}</span>
+            <span className="flex-1 truncate font-semibold text-card-foreground">{name} <span className="ml-1 text-[10px] font-bold tracking-wide text-muted-foreground">{getCrest(name).sigla}</span></span>
             {showScore && <span className="font-display text-xl font-bold text-navy">{score}</span>}
           </div>
         ))}
