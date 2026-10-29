@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
 import { Home, Trophy, Dribbble, CircleDot, Radio, ListChecks, Search, Menu, X, Ticket, User } from "lucide-react";
 import { useStore } from "@/lib/store";
@@ -52,6 +52,7 @@ function SearchBox({ onDone }: { onDone?: () => void }) {
 export function Layout({ children }: { children: ReactNode }) {
   const { slip, setSlipOpen, user, balance } = useStore();
   const [menu, setMenu] = useState(false);
+  const isHome = useRouterState({ select: (s) => s.location.pathname === "/" });
 
   return (
     <div className="min-h-screen flex flex-col pb-16 lg:pb-0">
