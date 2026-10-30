@@ -69,7 +69,7 @@ export function Layout({ children }: { children: ReactNode }) {
               <div className="hidden flex-1 max-w-sm md:block"><SearchBox /></div>
               <div className="ml-auto flex items-center gap-2">
                 <span className="hidden sm:inline rounded-md bg-navy-deep px-3 py-1.5 text-xs text-navy-muted">
-                  Créditos: <b className="text-navy-foreground">{balance.toFixed(2)}</b>
+                  Créditos: <b className="text-navy-foreground">{balance == null ? "—" : balance.toFixed(2)}</b>
                 </span>
                 {user ? (
                   <Link to="/entrar" className="flex items-center gap-1.5 rounded-md bg-navy-deep px-3 py-1.5 text-sm">
@@ -122,7 +122,7 @@ export function Layout({ children }: { children: ReactNode }) {
               ))}
               <Link to="/admin" onClick={() => setMenu(false)} className="px-3 py-3 text-sm text-navy-muted">Painel administrativo</Link>
             </div>
-            <p className="mt-6 text-xs text-navy-muted">Créditos: {balance.toFixed(2)}</p>
+            <p className="mt-6 text-xs text-navy-muted">Créditos: {balance == null ? "—" : balance.toFixed(2)}</p>
           </aside>
         </div>
       )}
