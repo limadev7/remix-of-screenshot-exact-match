@@ -9,6 +9,8 @@ const LEAGUES: { path: string; name: string; sport: Sport }[] = [
   { path: "soccer/eng.1", name: "Premier League", sport: "futebol" },
   { path: "soccer/esp.1", name: "La Liga", sport: "futebol" },
   { path: "basketball/nba", name: "NBA", sport: "basquete" },
+  { path: "tennis/atp", name: "ATP", sport: "tenis" },
+  { path: "tennis/wta", name: "WTA", sport: "tenis" },
 ];
 
 let cache: { at: number; data: RealMatch[] } | null = null;
@@ -53,7 +55,39 @@ function toMatch(ev: any, lg: (typeof LEAGUES)[number]): RealMatch | null {
   };
 }
 
-export const fetchRealMatches = createServerFn({ method: "GET" }).handler(async (): Promise<RealMatch[]> => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function toTennis(c: any, lg: (typeof LEAGUES)[number], tour: string): RealMatch | null {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [h, a] = [...(c.competitors ?? [])].sort((x: any, y: any) => (x.order ?? 0) - (y.order ?? 0));
+  if (!h?.athlete || !a?.athlete) return null;
+  const state = c.status?.type?.state;
+  const status: Status = state === "in" ? "live" : state === "post" ? "finished" : "upcoming";
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sets = (x: any) => (x.linescores ?? []).filter((l: any) => l.winner).length;
+  return {
+    id: `espn-t${c.id}`, sport: "tenis", league: `${lg.name} ${tour}`.trim(),
+    home: h.athlete.displayName, away: a.athlete.displayName,
+    homeLogo: h.athlete.flag?.href, awayLogo: a.athlete.flag?.href,
+    homeAbbr: h.athlete.flag?.alt?.slice(0, 3).toUpperCase(), awayAbbr: a.athlete.flag?.alt?.slice(0, 3).toUpperCase(),
+    date: new Date(new Date(c.date).getTime() - 3 * 3600_000).toISOString().slice(0, 16),
+    status, scoreHome: sets(h), scoreAway: sets(a), minute: c.status?.period ?? 0,
+    odds: { home: odd(c.id + "h", 1.4), draw: null, away: odd(c.id + "a", 1.6) },
+    featured: status === "live",
+  };
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parse(j: any, lg: (typeof LEAGUES)[number]): RealMatch[] {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const evs: any[] = j.events ?? [];
+  if (lg.sport !== "tenis") return evs.map((e) => toMatch(e, lg)).filter(Boolean) as RealMatch[];
+  return evs.flatMap((e) =>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (e.groupings ?? []).flatMap((g: any) => (g.competitions ?? []).map((c: any) => toTennis(c, lg, e.shortName ?? e.name ?? ""))),
+  ).filter(Boolean) as RealMatch[];
+}
+
+export async function loadRealMatches(): Promise<RealMatch[]> {
   if (cache && Date.now() - cache.at < 60_000) return cache.data;
   const now = new Date(Date.now() - 3 * 3600_000);
   const y = now.getUTCFullYear(), mo = now.getUTCMonth();
@@ -66,7 +100,7 @@ export const fetchRealMatches = createServerFn({ method: "GET" }).handler(async 
         fetch(`https://site.api.espn.com/apis/site/v2/sports/${lg.path}/scoreboard?dates=${ds}`)
           .then((r) => (r.ok ? r.json() : { events: [] }))
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          .then((j: any) => (j.events ?? []).map((e: unknown) => toMatch(e, lg)).filter(Boolean) as RealMatch[])
+          .then((j: any) => parse(j, lg))
           .catch(() => []),
       );
     }
@@ -75,4 +109,6 @@ export const fetchRealMatches = createServerFn({ method: "GET" }).handler(async 
   const uniq = [...new Map(all.map((m) => [m.id, m])).values()];
   if (uniq.length) cache = { at: Date.now(), data: uniq };
   return uniq;
-});
+}
+
+export const fetchRealMatches = createServerFn({ method: "GET" }).handler(() => loadRealMatches());

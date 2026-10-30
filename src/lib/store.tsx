@@ -1,26 +1,24 @@
 import { supabase } from "@/integrations/supabase/client";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
-import { seedMatches, type Match } from "@/data/matches";
+import type { Match } from "@/data/matches";
 import { fetchRealMatches } from "@/lib/real-matches.functions";
+import { getAccount, placeBet as placeBetFn, type BetRow } from "@/lib/bets.functions";
 import { registerLogo } from "@/components/team-crest";
-import { toggleSelection, potentialReturn, combinedOdd, type Selection } from "@/lib/slip";
-
-interface SimBet { id: string; date: string; selections: Selection[]; stake: number; odd: number; ret: number }
+import { toggleSelection, type Selection } from "@/lib/slip";
 
 interface Store {
   matches: Match[];
-  saveMatch: (m: Match) => void;
-  deleteMatch: (id: string) => void;
-  resetMatches: () => void;
+  loadingMatches: boolean;
   slip: Selection[];
   toggle: (s: Selection) => void;
   removeSel: (matchId: string) => void;
   clearSlip: () => void;
   stake: number;
   setStake: (n: number) => void;
-  balance: number;
-  history: SimBet[];
-  placeBet: () => boolean;
+  balance: number | null;
+  history: BetRow[];
+  placeBet: () => Promise<string | null>;
+  refreshAccount: () => void;
   user: string | null;
   setUser: (u: string | null) => void;
   slipOpen: boolean;
@@ -28,73 +26,72 @@ interface Store {
 }
 
 const Ctx = createContext<Store | null>(null);
-const KEY = "7mbet-v2";
+const KEY = "7mbet-v3";
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [matches, setMatches] = useState<Match[]>(seedMatches);
+  const [matches, setMatches] = useState<Match[]>([]);
+  const [loadingMatches, setLoadingMatches] = useState(true);
   const [slip, setSlip] = useState<Selection[]>([]);
   const [stake, setStake] = useState(10);
-  const [balance, setBalance] = useState(1000);
-  const [history, setHistory] = useState<SimBet[]>([]);
+  const [balance, setBalance] = useState<number | null>(null);
+  const [history, setHistory] = useState<BetRow[]>([]);
   const [user, setUser] = useState<string | null>(null);
   const [slipOpen, setSlipOpen] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
+  const refreshAccount = useCallback(() => {
+    getAccount().then((a) => { setBalance(a.balance); setHistory(a.bets); }).catch(() => {});
+  }, []);
+
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(KEY);
-      if (raw) {
-        const d = JSON.parse(raw);
-        if (d.matches) setMatches(d.matches);
-        if (d.slip) setSlip(d.slip);
-        if (d.stake) setStake(d.stake);
-        if (typeof d.balance === "number") setBalance(d.balance);
-        if (d.history) setHistory(d.history);
-      }
-    } catch { /* ignora dados inválidos */ }
+      const d = JSON.parse(localStorage.getItem(KEY) ?? "{}");
+      if (d.slip) setSlip(d.slip);
+      if (d.stake) setStake(d.stake);
+    } catch { /* ignora */ }
     setLoaded(true);
     const loadReal = () => fetchRealMatches().then((real) => {
-      if (!real.length) return;
       real.forEach((m) => { registerLogo(m.home, m.homeAbbr, m.homeLogo); registerLogo(m.away, m.awayAbbr, m.awayLogo); });
-      setMatches((cur) => [...real, ...cur.filter((x) => !x.id.startsWith("espn-") && x.sport === "tenis")]);
-    }).catch(() => {});
+      setMatches(real);
+    }).catch(() => {}).finally(() => setLoadingMatches(false));
     loadReal();
     const timer = setInterval(loadReal, 60_000);
     const nameOf = (u: { email?: string; user_metadata?: Record<string, unknown> } | null | undefined) =>
       u ? String(u.user_metadata?.["nickname"] || u.user_metadata?.["full_name"] || u.email?.split("@")[0] || "Conta") : null;
-    supabase.auth.getSession().then(({ data }) => setUser(nameOf(data.session?.user)));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => setUser(nameOf(session?.user)));
+    const onSession = (u: Parameters<typeof nameOf>[0]) => {
+      setUser(nameOf(u));
+      if (u) refreshAccount(); else { setBalance(null); setHistory([]); }
+    };
+    supabase.auth.getSession().then(({ data }) => onSession(data.session?.user));
+    const { data: sub } = supabase.auth.onAuthStateChange((e, session) => {
+      if (e === "SIGNED_IN" || e === "SIGNED_OUT" || e === "USER_UPDATED") onSession(session?.user);
+    });
     return () => { sub.subscription.unsubscribe(); clearInterval(timer); };
-  }, []);
+  }, [refreshAccount]);
 
   useEffect(() => {
-    if (!loaded) return;
-    localStorage.setItem(KEY, JSON.stringify({ matches, slip, stake, balance, history }));
-  }, [loaded, matches, slip, stake, balance, history, user]);
+    if (loaded) localStorage.setItem(KEY, JSON.stringify({ slip, stake }));
+  }, [loaded, slip, stake]);
 
-  const placeBet = useCallback(() => {
-    if (slip.length === 0 || stake <= 0 || stake > balance) return false;
-    const bet: SimBet = {
-      id: crypto.randomUUID(), date: new Date().toISOString(), selections: slip, stake,
-      odd: combinedOdd(slip), ret: potentialReturn(stake, slip),
-    };
-    setHistory((h) => [bet, ...h].slice(0, 20));
-    setBalance((b) => Math.round((b - stake) * 100) / 100);
-    setSlip([]);
-    return true;
-  }, [slip, stake, balance]);
+  const placeBet = useCallback(async () => {
+    if (!user) return "Entre na sua conta para apostar.";
+    try {
+      await placeBetFn({ data: { selections: slip, stake } });
+      setSlip([]);
+      refreshAccount();
+      return null;
+    } catch (e) {
+      return e instanceof Error ? e.message : "Erro ao apostar.";
+    }
+  }, [user, slip, stake, refreshAccount]);
 
   const value = useMemo<Store>(() => ({
-    matches,
-    saveMatch: (m) => setMatches((list) => list.some((x) => x.id === m.id) ? list.map((x) => (x.id === m.id ? m : x)) : [m, ...list]),
-    deleteMatch: (id) => setMatches((l) => l.filter((x) => x.id !== id)),
-    resetMatches: () => { setMatches(seedMatches()); setSlip([]); setBalance(1000); setHistory([]); },
-    slip,
+    matches, loadingMatches, slip,
     toggle: (s) => setSlip((l) => toggleSelection(l, s)),
     removeSel: (id) => setSlip((l) => l.filter((s) => s.matchId !== id)),
     clearSlip: () => setSlip([]),
-    stake, setStake, balance, history, placeBet, user, setUser, slipOpen, setSlipOpen,
-  }), [matches, slip, stake, balance, history, placeBet, user, slipOpen]);
+    stake, setStake, balance, history, placeBet, refreshAccount, user, setUser, slipOpen, setSlipOpen,
+  }), [matches, loadingMatches, slip, stake, balance, history, placeBet, refreshAccount, user, slipOpen]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

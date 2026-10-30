@@ -5,7 +5,8 @@ import { combinedOdd, potentialReturn } from "@/lib/slip";
 
 export function BetSlip({ onClose }: { onClose?: () => void }) {
   const { slip, removeSel, clearSlip, stake, setStake, balance, placeBet, history } = useStore();
-  const [msg, setMsg] = useState<string | null>(null);
+  const [msg, setMsg] = useState<{ ok: boolean; t: string } | null>(null);
+  const [busy, setBusy] = useState(false);
   const odd = combinedOdd(slip);
   const ret = potentialReturn(stake, slip);
 
@@ -54,7 +55,7 @@ export function BetSlip({ onClose }: { onClose?: () => void }) {
         <dl className="space-y-1 text-sm">
           <div className="flex justify-between"><dt className="text-muted-foreground">Odd combinada</dt><dd className="font-bold">{odd ? odd.toFixed(2) : "—"}</dd></div>
           <div className="flex justify-between"><dt className="text-muted-foreground">Retorno teórico</dt><dd className="font-bold text-success">{ret.toFixed(2)}</dd></div>
-          <div className="flex justify-between text-xs"><dt className="text-muted-foreground">Saldo</dt><dd>{balance.toFixed(2)}</dd></div>
+          <div className="flex justify-between text-xs"><dt className="text-muted-foreground">Saldo</dt><dd>{balance == null ? "Entre para apostar" : balance.toFixed(2)}</dd></div>
         </dl>
 
         <div className="mt-4 flex gap-2">
@@ -63,17 +64,20 @@ export function BetSlip({ onClose }: { onClose?: () => void }) {
             <Trash2 className="h-4 w-4" />
           </button>
           <button
-            disabled={!slip.length || stake <= 0}
-            onClick={() => {
-              if (stake > balance) return setMsg("Saldo insuficiente.");
-              setMsg(placeBet() ? "Aposta registrada no histórico." : null);
+            disabled={!slip.length || stake <= 0 || busy}
+            onClick={async () => {
+              if (balance != null && stake > balance) return setMsg({ ok: false, t: "Saldo insuficiente." });
+              setBusy(true);
+              const err = await placeBet();
+              setBusy(false);
+              setMsg(err ? { ok: false, t: err } : { ok: true, t: "Aposta registrada. Ela é resolvida sozinha quando os jogos terminam." });
             }}
             className="h-10 flex-1 rounded-md bg-primary font-semibold text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-40"
           >
             Apostar
           </button>
         </div>
-        {msg && <p className="mt-2 text-xs text-success">{msg}</p>}
+        {msg && <p className={`mt-2 text-xs ${msg.ok ? "text-success" : "text-destructive"}`}>{msg.t}</p>}
 
 
         {history.length > 0 && (
@@ -82,8 +86,8 @@ export function BetSlip({ onClose }: { onClose?: () => void }) {
             <ul className="mt-2 space-y-1">
               {history.map((h) => (
                 <li key={h.id} className="flex justify-between rounded bg-muted px-2 py-1">
-                  <span>{h.selections.length} sel. · odd {h.odd.toFixed(2)}</span>
-                  <span>{h.stake} → <b className="text-success">{h.ret.toFixed(2)}</b></span>
+                  <span>{h.selections.length} sel. · odd {h.odd.toFixed(2)} · {h.status === "won" ? "Ganhou" : h.status === "lost" ? "Perdeu" : "Pendente"}</span>
+                  <span>{h.stake} → <b className={h.status === "lost" ? "text-destructive" : "text-success"}>{h.potential_return.toFixed(2)}</b></span>
                 </li>
               ))}
             </ul>
