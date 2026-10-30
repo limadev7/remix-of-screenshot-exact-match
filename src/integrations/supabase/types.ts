@@ -14,13 +14,71 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bets: {
+        Row: {
+          created_at: string
+          id: string
+          odd: number
+          potential_return: number
+          selections: Json
+          settled_at: string | null
+          stake: number
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          odd: number
+          potential_return: number
+          selections: Json
+          settled_at?: string | null
+          stake: number
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          odd?: number
+          potential_return?: number
+          selections?: Json
+          settled_at?: string | null
+          stake?: number
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wallets: {
+        Row: {
+          balance: number
+          created_at: string
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          created_at?: string
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          created_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_metrics: { Args: never; Returns: Json }
+      place_bet: {
+        Args: { _odd: number; _selections: Json; _stake: number; _user: string }
+        Returns: string
+      }
+      settle_bet: { Args: { _bet: string; _won: boolean }; Returns: undefined }
     }
     Enums: {
       [_ in never]: never
