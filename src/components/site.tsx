@@ -50,7 +50,7 @@ function SearchBox({ onDone }: { onDone?: () => void }) {
 }
 
 export function Layout({ children }: { children: ReactNode }) {
-  const { slip, setSlipOpen, user, balance } = useStore();
+  const { slip, setSlipOpen, user, balance, loadingMatches } = useStore();
   const [menu, setMenu] = useState(false);
   const isHome = useRouterState({ select: (s) => s.location.pathname === "/" });
 
@@ -128,7 +128,7 @@ export function Layout({ children }: { children: ReactNode }) {
       )}
 
       <div className="mx-auto flex w-full max-w-7xl flex-1 gap-6 px-4 py-5">
-        <main className="min-w-0 flex-1">{children}</main>
+        <main className="min-w-0 flex-1">{loadingMatches ? <Loader /> : children}</main>
         <aside className="hidden lg:block w-80 shrink-0">
           <div className="sticky top-28"><BetSlip /></div>
         </aside>
@@ -193,6 +193,19 @@ export function SectionTitle({ children, action }: { children: ReactNode; action
     <div className="mb-3 flex items-end justify-between gap-2">
       <h2 className="text-2xl font-bold uppercase italic tracking-tight text-navy">{children}</h2>
       {action}
+    </div>
+  );
+}
+
+export function Loader() {
+  return (
+    <div role="status" aria-label="Carregando" className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
+      <div className="relative h-16 w-16">
+        <span className="absolute inset-0 rounded-full border-4 border-muted" />
+        <span className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-primary" />
+        <span className="absolute inset-0 flex items-center justify-center font-display text-lg font-extrabold italic text-primary">7M</span>
+      </div>
+      <p className="animate-pulse font-display text-sm font-bold uppercase tracking-widest text-muted-foreground">Carregando jogos…</p>
     </div>
   );
 }
