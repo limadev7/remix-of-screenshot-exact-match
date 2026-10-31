@@ -98,7 +98,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 <n.icon className="h-4 w-4" /> {n.label}
               </Link>
             ))}
-            <Link to="/admin" className="ml-auto px-4 py-2.5 text-xs text-navy-muted hover:text-navy-foreground">Painel</Link>
+            <Link to="/admin" className="ml-auto px-4 py-2.5 text-xs text-navy-muted hover:text-navy-foreground">Métricas</Link>
           </div>
         </nav>
       </header>
@@ -120,7 +120,7 @@ export function Layout({ children }: { children: ReactNode }) {
                   <n.icon className="h-5 w-5" /> {n.label}
                 </Link>
               ))}
-              <Link to="/admin" onClick={() => setMenu(false)} className="px-3 py-3 text-sm text-navy-muted">Painel administrativo</Link>
+              <Link to="/admin" onClick={() => setMenu(false)} className="px-3 py-3 text-sm text-navy-muted">Métricas</Link>
             </div>
             <p className="mt-6 text-xs text-navy-muted">Créditos: {balance == null ? "—" : balance.toFixed(2)}</p>
           </aside>

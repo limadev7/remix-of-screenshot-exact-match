@@ -34,7 +34,7 @@ export const POPULAR_LEAGUES = [
   { name: "Premier League", sport: "futebol" as Sport },
   { name: "La Liga", sport: "futebol" as Sport },
   { name: "NBA", sport: "basquete" as Sport },
-  { name: "ATP Paris Masters", sport: "tenis" as Sport },
+  { name: "ATP", sport: "tenis" as Sport },
 ]
 
 export function formatDate(iso: string) {
