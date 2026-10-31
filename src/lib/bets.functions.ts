@@ -36,7 +36,17 @@ export const placeBet = createServerFn({ method: "POST" })
 export const getAccount = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabase, userId } = context;
+    const { supabase, userId, claims } = context;
+    {
+      const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+      const ins = await supabaseAdmin.from("wallets").upsert({ user_id: userId }, { onConflict: "user_id", ignoreDuplicates: true }).select("user_id");
+      const email = (claims as { email?: string }).email;
+      if (ins.data?.length && email) {
+        const { sendEmail, welcomeHtml } = await import("@/lib/email.server");
+        const meta = (claims as { user_metadata?: Record<string, unknown> }).user_metadata ?? {};
+        await sendEmail(email, "Bem-vindo ao 7MBET", welcomeHtml(String(meta["nickname"] || meta["full_name"] || email.split("@")[0])));
+      }
+    }
     const pending = await supabase.from("bets").select("id, selections").eq("user_id", userId).eq("status", "pending");
     if (pending.data?.length) {
       const real = new Map<string, RealMatch>((await loadRealMatches()).map((m) => [m.id, m]));
