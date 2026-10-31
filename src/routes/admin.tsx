@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Layout, SectionTitle } from "@/components/site";
+import { Layout, Loader, SectionTitle } from "@/components/site";
 import { getMetrics, type Metrics } from "@/lib/bets.functions";
 import { useStore } from "@/lib/store";
 
@@ -32,7 +32,7 @@ function Admin() {
   return (
     <Layout>
       <SectionTitle>Métricas</SectionTitle>
-      {!m ? <p className="text-sm text-muted-foreground">Carregando…</p> : (
+      {!m ? <Loader /> : (
         <>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
             {card("Usuários apostando", m.users)}
