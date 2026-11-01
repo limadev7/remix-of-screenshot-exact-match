@@ -12,7 +12,8 @@ export const BRAND = {
   success: "#0f8a4d",
 };
 
-export const SITE_URL = process.env["SITE_URL"] || "https://pixel-perfect-picture-maker-35.lovable.app";
+const envUrl = typeof process !== "undefined" ? (process.env?.["SITE_URL"] as string | undefined) : undefined;
+export const SITE_URL = envUrl || "https://pixel-perfect-picture-maker-35.lovable.app";
 
 export const buttonStyle = (bg: string = BRAND.blue) => ({
   backgroundColor: bg,
