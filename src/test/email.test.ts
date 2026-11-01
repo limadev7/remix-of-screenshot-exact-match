@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { renderTemplate, subjectOf, TEMPLATES } from "@/email";
 
+// O renderizador do React Email separa trechos de texto com comentários HTML.
+const text = (html: string) => html.replace(/<!--\s*-->/g, "");
+
 describe("templates de e-mail", () => {
   it("boas-vindas traz o nome, os créditos iniciais e o link do site", async () => {
-    const html = await renderTemplate("welcome", { name: "Ana" });
+    const html = text(await renderTemplate("welcome", { name: "Ana" }));
     expect(html).toContain("Bem-vindo, Ana");
     expect(html).toContain("1000 créditos");
     expect(html).toContain("pixel-perfect-picture-maker-35.lovable.app");
@@ -17,7 +20,7 @@ describe("templates de e-mail", () => {
   });
 
   it("depósito mostra o valor adicionado e o saldo", async () => {
-    const html = await renderTemplate("deposit", { name: "Ana", amount: 250, balance: 900 });
+    const html = text(await renderTemplate("deposit", { name: "Ana", amount: 250, balance: 900 }));
     expect(html).toContain("Depósito confirmado");
     expect(html).toContain("+250");
     expect(html).toContain("900");
@@ -25,7 +28,7 @@ describe("templates de e-mail", () => {
   });
 
   it("banimento mostra o motivo informado", async () => {
-    const html = await renderTemplate("ban", { name: "Ana", reason: "Uso de conta de terceiros" });
+    const html = text(await renderTemplate("ban", { name: "Ana", reason: "Uso de conta de terceiros" }));
     expect(html).toContain("Conta suspensa");
     expect(html).toContain("Uso de conta de terceiros");
   });
