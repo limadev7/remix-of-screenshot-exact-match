@@ -42,9 +42,10 @@ export const getAccount = createServerFn({ method: "GET" })
       const ins = await supabaseAdmin.from("wallets").upsert({ user_id: userId }, { onConflict: "user_id", ignoreDuplicates: true }).select("user_id");
       const email = (claims as { email?: string }).email;
       if (ins.data?.length && email) {
-        const { sendEmail, welcomeHtml } = await import("@/lib/email.server");
+        const { sendTemplate } = await import("@/lib/email.server");
         const meta = (claims as { user_metadata?: Record<string, unknown> }).user_metadata ?? {};
-        await sendEmail(email, "Bem-vindo ao 7MBET", welcomeHtml(String(meta["nickname"] || meta["full_name"] || email.split("@")[0])));
+        const name = String(meta["nickname"] || meta["full_name"] || email.split("@")[0]);
+        await sendTemplate("welcome", email, { name });
       }
     }
     const pending = await supabase.from("bets").select("id, selections").eq("user_id", userId).eq("status", "pending");
