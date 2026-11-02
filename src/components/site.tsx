@@ -1,6 +1,6 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useState, type ReactNode } from "react";
-import { Home, Trophy, Dribbble, CircleDot, Radio, ListChecks, Search, Menu, X, Ticket, User } from "lucide-react";
+import { Home, Trophy, Dribbble, CircleDot, Radio, ListChecks, Search, Menu, X, Ticket, User, Dices } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { BetSlip } from "@/components/bet-slip";
 
@@ -14,6 +14,7 @@ export const NAV = [
   { to: "/tenis", label: "Tênis", icon: CircleDot },
   { to: "/ao-vivo", label: "Ao Vivo", icon: Radio },
   { to: "/resultados", label: "Resultados", icon: ListChecks },
+  { to: "/cassino", label: "Cassino", icon: Dices },
 ] as const;
 
 export function Logo({ className = "text-2xl", tone = "dark" }: { className?: string; tone?: "dark" | "light" }) {

@@ -15,6 +15,7 @@ import { Route as AoVivoRouteImport } from './routes/ao-vivo'
 import { Route as BasqueteRouteImport } from './routes/basquete'
 import { Route as BuscaRouteImport } from './routes/busca'
 import { Route as CadastrarRouteImport } from './routes/cadastrar'
+import { Route as CassinoRouteImport } from './routes/cassino'
 import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as FutebolRouteImport } from './routes/futebol'
 import { Route as ResultadosRouteImport } from './routes/resultados'
@@ -50,6 +51,11 @@ const CadastrarRoute = CadastrarRouteImport.update({
   path: '/cadastrar',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CassinoRoute = CassinoRouteImport.update({
+  id: '/cassino',
+  path: '/cassino',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EntrarRoute = EntrarRouteImport.update({
   id: '/entrar',
   path: '/entrar',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/basquete': typeof BasqueteRoute
   '/busca': typeof BuscaRoute
   '/cadastrar': typeof CadastrarRoute
+  '/cassino': typeof CassinoRoute
   '/entrar': typeof EntrarRoute
   '/futebol': typeof FutebolRoute
   '/resultados': typeof ResultadosRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByTo {
   '/basquete': typeof BasqueteRoute
   '/busca': typeof BuscaRoute
   '/cadastrar': typeof CadastrarRoute
+  '/cassino': typeof CassinoRoute
   '/entrar': typeof EntrarRoute
   '/futebol': typeof FutebolRoute
   '/resultados': typeof ResultadosRoute
@@ -103,6 +111,7 @@ export interface FileRoutesById {
   '/basquete': typeof BasqueteRoute
   '/busca': typeof BuscaRoute
   '/cadastrar': typeof CadastrarRoute
+  '/cassino': typeof CassinoRoute
   '/entrar': typeof EntrarRoute
   '/futebol': typeof FutebolRoute
   '/resultados': typeof ResultadosRoute
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/basquete'
     | '/busca'
     | '/cadastrar'
+    | '/cassino'
     | '/entrar'
     | '/futebol'
     | '/resultados'
@@ -129,6 +139,7 @@ export interface FileRouteTypes {
     | '/basquete'
     | '/busca'
     | '/cadastrar'
+    | '/cassino'
     | '/entrar'
     | '/futebol'
     | '/resultados'
@@ -141,6 +152,7 @@ export interface FileRouteTypes {
     | '/basquete'
     | '/busca'
     | '/cadastrar'
+    | '/cassino'
     | '/entrar'
     | '/futebol'
     | '/resultados'
@@ -154,6 +166,7 @@ export interface RootRouteChildren {
   BasqueteRoute: typeof BasqueteRoute
   BuscaRoute: typeof BuscaRoute
   CadastrarRoute: typeof CadastrarRoute
+  CassinoRoute: typeof CassinoRoute
   EntrarRoute: typeof EntrarRoute
   FutebolRoute: typeof FutebolRoute
   ResultadosRoute: typeof ResultadosRoute
@@ -204,6 +217,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CadastrarRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cassino': {
+      id: '/cassino'
+      path: '/cassino'
+      fullPath: '/cassino'
+      preLoaderRoute: typeof CassinoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/entrar': {
       id: '/entrar'
       path: '/entrar'
@@ -242,6 +262,7 @@ const rootRouteChildren: RootRouteChildren = {
   BasqueteRoute: BasqueteRoute,
   BuscaRoute: BuscaRoute,
   CadastrarRoute: CadastrarRoute,
+  CassinoRoute: CassinoRoute,
   EntrarRoute: EntrarRoute,
   FutebolRoute: FutebolRoute,
   ResultadosRoute: ResultadosRoute,
