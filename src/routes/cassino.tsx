@@ -26,7 +26,7 @@ const GAMES = [
 ];
 
 function Cassino() {
-  const [game, setGame] = useState(GAMES[0]);
+  const [game, setGame] = useState(GAMES[0]!);
   return (
     <Layout>
       <SectionTitle>Cassino</SectionTitle>
@@ -53,11 +53,11 @@ function Slot({ name, icon }: { name: string; icon: string }) {
 
   const play = async () => {
     setBusy(true); setMsg(null);
-    const anim = setInterval(() => setReels([0, 1, 2].map(() => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)])), 80);
+    const anim = setInterval(() => setReels([0, 1, 2].map(() => SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)]!)), 80);
     try {
       const [res] = await Promise.all([spin({ data: { stake } }), new Promise((r) => setTimeout(r, 1200))]);
       clearInterval(anim);
-      setReels(res.reels.map((s) => (s === "🐯" ? icon : s)));
+      setReels(res.reels.map((s) => (s === "🐯" ? icon : s ?? icon)));
       setMsg(res.win ? `Você ganhou ${res.payout.toFixed(2)} créditos! (${res.mult}x)` : "Não foi dessa vez.");
       refreshAccount();
     } catch (e) {
