@@ -73,6 +73,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      casino_spin: {
+        Args: { _payout: number; _stake: number; _user: string }
+        Returns: number
+      }
       get_metrics: { Args: never; Returns: Json }
       place_bet: {
         Args: { _odd: number; _selections: Json; _stake: number; _user: string }
